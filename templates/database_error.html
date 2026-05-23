@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Database Setup{% endblock %}
+{% block content %}
+<section class="setup-panel">
+  <div>
+    <p class="eyebrow">Database Connection Required</p>
+    <h1>PostgreSQL is not connected</h1>
+    <p class="muted">
+      The HR portal login is working, but the dashboard cannot load until PostgreSQL is running and the portal can reach the same database used by the interview app.
+    </p>
+  </div>
+
+  <div class="setup-grid">
+    <article class="panel">
+      <h2>Current Connection</h2>
+      <code>{{ db_label }}</code>
+      <p class="muted">Update this value in <strong>E:\Wittmann Portel\.env</strong> if your PostgreSQL password, port, or database name is different.</p>
+    </article>
+
+    <article class="panel">
+      <h2>What To Check</h2>
+      <ol>
+        <li>Install PostgreSQL if it is not installed.</li>
+        <li>Start the PostgreSQL service.</li>
+        <li>Create database <strong>wittmann_interview_ai</strong>.</li>
+        <li>Run the main project seed script once.</li>
+      </ol>
+    </article>
+  </div>
+
+  <div class="panel">
+    <h2>PowerShell Commands</h2>
+    <pre><code>Get-Service | Where-Object { $_.DisplayName -match "PostgreSQL" }
+
+# After PostgreSQL is installed and running:
+createdb -U postgres wittmann_interview_ai
+cd E:\wittmann_interview_ai
+.\.venv\Scripts\python.exe scripts\seed_postgres_starter_bank.py</code></pre>
+  </div>
+
+  <details class="panel">
+    <summary>Technical error</summary>
+    <pre><code>{{ error }}</code></pre>
+  </details>
+</section>
+{% endblock %}

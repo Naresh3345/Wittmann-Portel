@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Questions{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <p class="eyebrow">Live Question Bank</p>
+    <h1>Role Questions</h1>
+  </div>
+  <a class="primary-action" href="{{ url_for('new_question') }}">New Question</a>
+</header>
+
+<form class="filters" method="get">
+  <select name="role_slug">
+    <option value="">All roles</option>
+    {% for role in roles %}
+    <option value="{{ role.role_slug }}" {{ "selected" if filters.role_slug == role.role_slug else "" }}>{{ role.role_name }}</option>
+    {% endfor %}
+  </select>
+  <select name="section">
+    <option value="">All sections</option>
+    {% for section in sections %}
+    <option value="{{ section }}" {{ "selected" if filters.section == section else "" }}>{{ section }}</option>
+    {% endfor %}
+  </select>
+  <select name="active">
+    <option value="">All status</option>
+    <option value="true" {{ "selected" if filters.active == "true" else "" }}>Active</option>
+    <option value="false" {{ "selected" if filters.active == "false" else "" }}>Disabled</option>
+  </select>
+  <button type="submit">Apply</button>
+</form>
+
+<section class="question-grid">
+  {% for q in questions %}
+  <article class="question-card {{ '' if q.active else 'disabled' }}">
+    <div class="question-top">
+      <span class="pill">{{ q.section }}</span>
+      <span>{{ q.difficulty }}</span>
+    </div>
+    <h2>{{ q.topic }}</h2>
+    <p>{{ q.question_text }}</p>
+    <small>{{ q.role_slug }} · {{ q.question_code or "No code" }}</small>
+    <div class="question-actions">
+      <a href="{{ url_for('edit_question', question_id=q.question_id) }}">Edit</a>
+      <form method="post" action="{{ url_for('toggle_question', question_id=q.question_id) }}">
+        <button type="submit">{{ "Disable" if q.active else "Enable" }}</button>
+      </form>
+    </div>
+  </article>
+  {% else %}
+  <p class="empty">No questions found.</p>
+  {% endfor %}
+</section>
+{% endblock %}

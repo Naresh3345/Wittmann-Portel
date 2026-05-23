@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <p class="eyebrow">Wittmann AI Interview</p>
+    <h1>Interviewer HR Portal</h1>
+    <p class="muted">Connected to {{ db_label }}</p>
+  </div>
+  <a class="primary-action" href="{{ url_for('questions') }}">Manage Questions</a>
+</header>
+
+<section class="metrics-grid">
+  <article><span>Total Interviews</span><strong>{{ stats.total_interviews }}</strong></article>
+  <article><span>Completed</span><strong>{{ stats.completed_interviews }}</strong></article>
+  <article><span>Shortlisted</span><strong>{{ stats.shortlisted }}</strong></article>
+  <article><span>Average Score</span><strong>{{ stats.average_score }}</strong></article>
+</section>
+
+<section class="content-grid">
+  <div class="panel">
+    <div class="panel-title">
+      <h2>Role Summary</h2>
+    </div>
+    <table>
+      <thead><tr><th>Role</th><th>Total</th><th>Shortlisted</th></tr></thead>
+      <tbody>
+        {% for role in role_rows %}
+        <tr><td>{{ role.role_name }}</td><td>{{ role.total }}</td><td>{{ role.shortlisted }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">
+      <h2>Recent Reports</h2>
+      <a href="{{ url_for('candidates') }}">View all</a>
+    </div>
+    <div class="report-list">
+      {% for item in recent %}
+      <a class="report-row" href="{{ url_for('download_report', interview_id=item.interview_id) }}">
+        <span>
+          <strong>{{ item.name }}</strong>
+          <small>{{ item.role_name }} · {{ item.shortlist_status or "Pending" }}</small>
+        </span>
+        <b>{{ item.total_score }}</b>
+      </a>
+      {% else %}
+      <p class="empty">No completed reports yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

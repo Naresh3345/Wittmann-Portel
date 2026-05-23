@@ -1,0 +1,4 @@
+Flask==3.0.3
+python-dotenv==1.0.1
+psycopg[binary]==3.2.13
+Werkzeug==3.0.3

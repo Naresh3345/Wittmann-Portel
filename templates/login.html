@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<section class="login-panel">
+  <header class="login-brandbar">
+    <img src="{{ url_for('static', filename='images/wittmann-logo-hq.png') }}" alt="Wittmann logo">
+    <span>Interview Intelligence</span>
+  </header>
+  <div class="login-copy">
+    <p class="eyebrow">Secure HR Access</p>
+    <h1>Interviewer HR Portal</h1>
+    <p>Manage candidate reports, shortlist decisions, and role-based interview questions from one professional WITTMANN workspace.</p>
+  </div>
+  <form class="login-card" method="post">
+    <p class="card-kicker">Authorized team only</p>
+    <h2>Sign in to continue</h2>
+    <label>
+      Username
+      <input type="text" name="username" autocomplete="username" required autofocus>
+    </label>
+    <label>
+      Password
+      <input type="password" name="password" autocomplete="current-password" required>
+    </label>
+    <button type="submit">Sign in</button>
+  </form>
+</section>
+{% endblock %}

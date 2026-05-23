@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Question{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <p class="eyebrow">Question Bank</p>
+    <h1>{{ "Edit Question" if question else "New Question" }}</h1>
+  </div>
+  <a class="secondary-action" href="{{ url_for('questions') }}">Back</a>
+</header>
+
+<form class="editor-form" method="post">
+  <div class="form-row">
+    <label>
+      Role
+      <select name="role_slug" required>
+        {% for role in roles %}
+        <option value="{{ role.role_slug }}" {{ "selected" if question and question.role_slug == role.role_slug else "" }}>{{ role.role_name }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>
+      Section
+      <select name="section" required>
+        {% for section in sections %}
+        <option value="{{ section }}" {{ "selected" if question and question.section == section else "" }}>{{ section }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>
+      Difficulty
+      <select name="difficulty">
+        {% for difficulty in ["Easy", "Medium", "Hard"] %}
+        <option value="{{ difficulty }}" {{ "selected" if question and question.difficulty == difficulty else "" }}>{{ difficulty }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  </div>
+
+  <div class="form-row">
+    <label>
+      Question Code
+      <input name="question_code" value="{{ question.question_code if question else '' }}">
+    </label>
+    <label>
+      Topic
+      <input name="topic" value="{{ question.topic if question else '' }}" required>
+    </label>
+    <label>
+      Marks
+      <input type="number" name="marks" min="1" max="100" value="{{ question.marks if question else 5 }}">
+    </label>
+  </div>
+
+  <label>
+    Question
+    <textarea name="question_text" rows="7" required>{{ question.question_text if question else '' }}</textarea>
+  </label>
+
+  <label>
+    Correct Answer
+    <textarea name="correct_answer" rows="4" required>{{ question.correct_answer if question else '' }}</textarea>
+  </label>
+
+  <div class="form-row two">
+    <label>
+      Options
+      <textarea name="options" rows="5">{{ question.options | join('\n') if question else '' }}</textarea>
+    </label>
+    <label>
+      Keywords
+      <textarea name="keywords" rows="5">{{ question.keywords | join('\n') if question else '' }}</textarea>
+    </label>
+  </div>
+
+  <label class="check-row">
+    <input type="checkbox" name="active" {{ "checked" if not question or question.active else "" }}>
+    Active for future interviews
+  </label>
+
+  <button class="primary-action" type="submit">Save Question</button>
+</form>
+{% endblock %}

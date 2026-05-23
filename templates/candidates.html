@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Candidates{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <p class="eyebrow">Reports</p>
+    <h1>Candidate Results</h1>
+  </div>
+</header>
+
+<form class="filters" method="get">
+  <input type="search" name="search" placeholder="Search name, email, phone" value="{{ filters.search }}">
+  <select name="status">
+    {% for status in ["", "Shortlisted", "Needs Review", "Not Shortlisted", "Rejected"] %}
+    <option value="{{ status }}" {{ "selected" if filters.status == status else "" }}>{{ status or "All statuses" }}</option>
+    {% endfor %}
+  </select>
+  <select name="role_id">
+    <option value="">All roles</option>
+    {% for role in roles %}
+    <option value="{{ role.role_id }}" {{ "selected" if filters.role_id|string == role.role_id|string else "" }}>{{ role.role_name }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit">Apply</button>
+</form>
+
+<section class="panel">
+  <table>
+    <thead>
+      <tr>
+        <th>Candidate</th>
+        <th>Role</th>
+        <th>Score</th>
+        <th>Status</th>
+        <th>Reason</th>
+        <th>Files</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in reports %}
+      <tr>
+        <td>
+          <strong>{{ item.name }}</strong>
+          <small>{{ item.email }} · {{ item.phone }}</small>
+        </td>
+        <td>{{ item.role_name }}</td>
+        <td><span class="score">{{ item.total_score }}</span></td>
+        <td><span class="pill">{{ item.shortlist_status or "Pending" }}</span></td>
+        <td>{{ item.shortlist_reason or "-" }}</td>
+        <td class="actions">
+          <a href="{{ url_for('download_report', interview_id=item.interview_id) }}">Report</a>
+          <a href="{{ url_for('download_resume', interview_id=item.interview_id) }}">Resume</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" class="empty">No candidates match this view.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}
