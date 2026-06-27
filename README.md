@@ -85,6 +85,23 @@ Open:
 http://localhost:5050
 ```
 
+## Deploying on Vercel
+
+The app is configured for Vercel with `pyproject.toml` and `vercel.json`.
+
+Add these Environment Variables in the Vercel project settings before deploying:
+
+```text
+SECRET_KEY=use-a-long-random-value
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DATABASE?sslmode=require
+HR_USERNAME=Vasanth
+HR_PASSWORD=use-a-strong-initial-password
+HR_EMAIL=hr@example.com
+HR_PORTAL_URL=https://your-vercel-domain.vercel.app
+```
+
+Do not use `localhost` in `DATABASE_URL` on Vercel. Use a hosted PostgreSQL database such as Vercel Postgres, Neon, Supabase, or another public PostgreSQL provider.
+
 ## Important
 
 This portal has no candidate registration, OTP, interview, or test routes. It is only for HR/admin work.
