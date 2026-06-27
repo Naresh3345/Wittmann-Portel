@@ -54,6 +54,7 @@ textarea {
   grid-template-columns: minmax(360px, 1fr) 430px;
   gap: clamp(32px, 8vw, 130px);
   align-items: center;
+  margin: 0 auto;
   padding-top: 94px;
   position: relative;
 }
@@ -123,6 +124,9 @@ textarea {
 .login-card {
   padding: 30px;
   border-color: #f0dce8;
+  align-self: center;
+  justify-self: end;
+  width: min(430px, 100%);
 }
 
 .login-card h2 {
@@ -215,22 +219,53 @@ button:hover,
   border-bottom: 4px solid var(--brand);
 }
 
-.menu-mark {
-  display: grid;
+.menu-toggle {
+  position: relative;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   gap: 6px;
-  width: 36px;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  padding: 6px 4px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
 }
 
-.menu-mark span {
+.menu-toggle:hover {
+  background: transparent;
+}
+
+.menu-toggle span {
   display: block;
+  width: 34px;
+  min-height: 3px;
   height: 3px;
   background: #1f2937;
 }
 
 .portal-nav {
-  display: flex;
-  gap: 24px;
-  align-items: center;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: none;
+  width: min(620px, 100vw);
+  padding: 20px 32px;
+  background: var(--white);
+  border-top: 1px solid #d7d7d7;
+  border-right: 1px solid #eeeeee;
+  box-shadow: 0 18px 35px rgba(7, 8, 20, 0.10);
+  z-index: 20;
+}
+
+.portal-nav.open {
+  display: block;
 }
 
 .portal-nav a,
@@ -239,6 +274,27 @@ button:hover,
   font-size: 16px;
   font-weight: 900;
   text-transform: uppercase;
+}
+
+.portal-nav a {
+  position: relative;
+  display: block;
+  padding: 18px 34px 18px 16px;
+  border-bottom: 1px solid #d1d1d1;
+  font-size: 22px;
+  line-height: 1.1;
+  text-transform: none;
+}
+
+.portal-nav a::after {
+  content: ">";
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  color: var(--brand);
+  font-size: 18px;
+  font-weight: 900;
+  transform: translateY(-50%) rotate(90deg);
 }
 
 .portal-nav a.active,
@@ -369,7 +425,7 @@ td small {
 
 .filters {
   display: grid;
-  grid-template-columns: minmax(220px, 1fr) 180px 180px auto;
+  grid-template-columns: minmax(220px, 1fr) 210px 180px 180px auto;
   gap: 12px;
   max-width: 1440px;
   margin: 0 auto 18px;
@@ -404,8 +460,22 @@ td small {
   font-size: 12px;
 }
 
+.pill.warn {
+  color: #92400e;
+  background: #fff7ed;
+}
+
 .actions {
   white-space: nowrap;
+}
+
+.actions form {
+  display: inline-flex;
+  margin: 0 0 0 6px;
+}
+
+.actions form:first-child {
+  margin-left: 0;
 }
 
 .actions a + a {
@@ -490,10 +560,12 @@ td small {
 .flash-stack {
   position: fixed;
   top: 18px;
-  right: 18px;
-  z-index: 20;
+  left: 50%;
+  z-index: 60;
   display: grid;
   gap: 8px;
+  width: min(760px, calc(100vw - 32px));
+  transform: translateX(-50%);
 }
 
 .flash {
@@ -501,6 +573,8 @@ td small {
   border-radius: 6px;
   box-shadow: var(--shadow);
   background: var(--white);
+  border-top: 4px solid var(--brand);
+  text-align: center;
 }
 
 .flash.error {
@@ -514,6 +588,26 @@ td small {
 .empty {
   color: var(--muted);
   text-align: center;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.candidate-groups {
+  display: grid;
+  gap: 20px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.access-result {
+  max-width: 1440px;
+  margin: 0 auto 18px;
 }
 
 .setup-panel {
@@ -584,13 +678,14 @@ details.panel summary {
   }
 
   .company-header {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 16px;
     padding: 18px 20px;
   }
 
   .header-account {
-    order: 4;
-    width: 100%;
+    width: auto;
     margin-left: 0;
   }
 
@@ -599,4 +694,55 @@ details.panel summary {
   }
 
   .portal-nav {
-    flex-wrap: 
+    flex-wrap: nowrap;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 720px) {
+  .company-header {
+    min-height: 74px;
+    padding: 16px 38px;
+    gap: 18px;
+  }
+
+  .menu-toggle {
+    flex-basis: 38px;
+    width: 38px;
+    min-width: 38px;
+  }
+
+  .portal-nav {
+    top: 100%;
+    left: 0;
+    right: auto;
+    width: 100vw;
+    padding: 18px 32px;
+    overflow-x: visible;
+  }
+
+  .portal-nav a {
+    font-size: 22px;
+    white-space: normal;
+  }
+
+  .header-account,
+  .header-logo {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .company-header {
+    padding-inline: 20px;
+    gap: 14px;
+  }
+
+  .portal-nav {
+    padding-inline: 24px;
+  }
+
+  .portal-nav a {
+    font-size: 20px;
+  }
+}

@@ -5,11 +5,16 @@
   <div>
     <p class="eyebrow">Reports</p>
     <h1>Candidate Results</h1>
+    <p class="muted">Shortlist benchmark: {{ shortlist_min_score }} marks</p>
   </div>
 </header>
 
 <form class="filters" method="get">
   <input type="search" name="search" placeholder="Search name, email, phone" value="{{ filters.search }}">
+  <select name="shortlist_mode">
+    <option value="automatic" {{ "selected" if filters.shortlist_mode == "automatic" else "" }}>Automatic shortlisting</option>
+    <option value="manual" {{ "selected" if filters.shortlist_mode == "manual" else "" }}>Manual shortlisting</option>
+  </select>
   <select name="status">
     {% for status in ["", "Shortlisted", "Needs Review", "Not Shortlisted", "Rejected"] %}
     <option value="{{ status }}" {{ "selected" if filters.status == status else "" }}>{{ status or "All statuses" }}</option>
@@ -24,38 +29,68 @@
   <button type="submit">Apply</button>
 </form>
 
-<section class="panel">
-  <table>
-    <thead>
-      <tr>
-        <th>Candidate</th>
-        <th>Role</th>
-        <th>Score</th>
-        <th>Status</th>
-        <th>Reason</th>
-        <th>Files</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in reports %}
-      <tr>
-        <td>
-          <strong>{{ item.name }}</strong>
-          <small>{{ item.email }} · {{ item.phone }}</small>
-        </td>
-        <td>{{ item.role_name }}</td>
-        <td><span class="score">{{ item.total_score }}</span></td>
-        <td><span class="pill">{{ item.shortlist_status or "Pending" }}</span></td>
-        <td>{{ item.shortlist_reason or "-" }}</td>
-        <td class="actions">
-          <a href="{{ url_for('download_report', interview_id=item.interview_id) }}">Report</a>
-          <a href="{{ url_for('download_resume', interview_id=item.interview_id) }}">Resume</a>
-        </td>
-      </tr>
-      {% else %}
-      <tr><td colspan="6" class="empty">No candidates match this view.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<section class="metrics-grid">
+  <article><span>Shortlisted</span><strong>{{ shortlisted_reports|length }}</strong></article>
+  <article><span>Not Shortlisted / Review</span><strong>{{ not_shortlisted_reports|length }}</strong></article>
+  <article><span>Total In View</span><strong>{{ reports|length }}</strong></article>
+  <article><span>Mode</span><strong>{{ "Auto" if shortlist_mode == "automatic" else "Manual" }}</strong></article>
+</section>
+
+{% macro candidate_table(items, empty_message) %}
+<table>
+  <thead>
+    <tr>
+      <th>Candidate</th>
+      <th>Role</th>
+      <th>Marks</th>
+      <th>Status</th>
+      <th>Reason</th>
+      <th>Files</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in items %}
+    <tr>
+      <td>
+        <strong>{{ item.name }}</strong>
+        <small>{{ item.email }} - {{ item.phone }}</small>
+      </td>
+      <td>{{ item.role_name }}</td>
+      <td><span class="score">{{ item.total_score }}</span></td>
+      <td><span class="pill">{{ item.display_shortlist_status or item.shortlist_status or "Pending" }}</span></td>
+      <td>{{ item.display_shortlist_reason or item.shortlist_reason or "-" }}</td>
+      <td class="actions">
+        <a href="{{ url_for('download_report', interview_id=item.interview_id) }}">Report</a>
+        <a href="{{ url_for('download_resume', interview_id=item.interview_id) }}">Resume</a>
+        {% if shortlist_mode == "manual" and (item.display_shortlist_status or item.shortlist_status) != "Shortlisted" %}
+        <form method="post" action="{{ url_for('approve_candidate', interview_id=item.interview_id) }}">
+          <button type="submit">Approve</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="6" class="empty">{{ empty_message }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endmacro %}
+
+<section class="candidate-groups">
+  <div class="panel">
+    <div class="panel-title">
+      <h2>Shortlisted Candidates</h2>
+      <span class="pill">{{ shortlisted_reports|length }}</span>
+    </div>
+    {{ candidate_table(shortlisted_reports, "No shortlisted candidates match this view.") }}
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">
+      <h2>Not Shortlisted / Needs Review</h2>
+      <span class="pill">{{ not_shortlisted_reports|length }}</span>
+    </div>
+    {{ candidate_table(not_shortlisted_reports, "No not-shortlisted candidates match this view.") }}
+  </div>
 </section>
 {% endblock %}

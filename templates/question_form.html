@@ -9,13 +9,19 @@
   <a class="secondary-action" href="{{ url_for('questions') }}">Back</a>
 </header>
 
+{% if not roles %}
+<section class="panel">
+  <p class="empty">Create a role before adding questions.</p>
+  <a class="primary-action" href="{{ url_for('new_role') }}">Create Role</a>
+</section>
+{% else %}
 <form class="editor-form" method="post">
   <div class="form-row">
     <label>
       Role
       <select name="role_slug" required>
         {% for role in roles %}
-        <option value="{{ role.role_slug }}" {{ "selected" if question and question.role_slug == role.role_slug else "" }}>{{ role.role_name }}</option>
+        <option value="{{ role.role_slug }}" {{ "selected" if selected_role_slug == role.role_slug else "" }}>{{ role.role_name }}</option>
         {% endfor %}
       </select>
     </label>
@@ -80,4 +86,5 @@
 
   <button class="primary-action" type="submit">Save Question</button>
 </form>
+{% endif %}
 {% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Role{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <p class="eyebrow">Interview Setup</p>
+    <h1>{{ "Edit Role" if role else "New Role" }}</h1>
+  </div>
+  <a class="secondary-action" href="{{ url_for('roles') }}">Back</a>
+</header>
+
+<form class="editor-form" method="post">
+  <div class="form-row two">
+    <label>
+      Role Name
+      <input name="role_name" value="{{ role.role_name if role else '' }}" placeholder="Example: Design Engineer" required>
+    </label>
+    <label>
+      Role Slug
+      <input name="role_slug" value="{{ role.role_slug if role else '' }}" placeholder="example: design-engineer">
+    </label>
+  </div>
+
+  <p class="muted">If you leave Role Slug empty, it will be created from the role name. This slug is used internally to connect questions with the role.</p>
+
+  <button class="primary-action" type="submit">Save Role</button>
+</form>
+{% endblock %}

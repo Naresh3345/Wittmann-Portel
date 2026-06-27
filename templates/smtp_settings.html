@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}SMTP Settings{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <p class="eyebrow">Email Setup</p>
+    <h1>SMTP Settings</h1>
+    <p class="muted">Configure email so HR access emails and candidate shortlist emails are sent automatically.</p>
+  </div>
+  <span class="pill {{ '' if configured else 'warn' }}">{{ "Configured" if configured else "Not Configured" }}</span>
+</header>
+
+<form class="editor-form" method="post">
+  <div class="form-row">
+    <label>
+      SMTP Host
+      <input name="smtp_host" value="{{ settings.SMTP_HOST }}" placeholder="smtp.gmail.com" required>
+    </label>
+    <label>
+      SMTP Port
+      <input type="number" name="smtp_port" value="{{ settings.SMTP_PORT or '587' }}" placeholder="587" required>
+    </label>
+    <label>
+      From Email
+      <input type="email" name="smtp_from" value="{{ settings.SMTP_FROM }}" placeholder="hr@example.com" required>
+    </label>
+  </div>
+
+  <div class="form-row two">
+    <label>
+      SMTP User
+      <input type="email" name="smtp_user" value="{{ settings.SMTP_USER }}" placeholder="your-email@gmail.com" required>
+    </label>
+    <label>
+      SMTP Password / App Password
+      <input type="password" name="smtp_password" placeholder="{{ 'Leave blank to keep saved password' if configured else 'Gmail app password' }}" {{ '' if configured else 'required' }}>
+    </label>
+  </div>
+
+  <label class="check-row">
+    <input type="checkbox" name="send_test" value="yes">
+    Send a test email after saving
+  </label>
+
+  <p class="muted">
+    For Gmail, enable 2-Step Verification and create a Google App Password.
+    Paste that 16-character app password here. Do not use your normal Gmail password.
+    SMTP User and From Email should usually be the same Gmail account.
+  </p>
+  <p class="notice warning">
+    If Gmail says "Username and Password not accepted", delete the saved SMTP password, generate a new Google App Password, paste it here, and save again.
+  </p>
+
+  <button class="primary-action" type="submit">Save SMTP Settings</button>
+</form>
+{% endblock %}

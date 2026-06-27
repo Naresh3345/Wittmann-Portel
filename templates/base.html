@@ -9,11 +9,18 @@
 <body>
   {% if session.get("hr_logged_in") %}
   <header class="company-header">
-    <div class="menu-mark" aria-hidden="true"><span></span><span></span><span></span></div>
-    <nav class="portal-nav" aria-label="HR portal navigation">
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="portal-nav" aria-label="Open navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="portal-nav" id="portal-nav" aria-label="HR portal navigation">
       <a href="{{ url_for('dashboard') }}" class="{{ 'active' if request.endpoint == 'dashboard' else '' }}">Dashboard</a>
       <a href="{{ url_for('candidates') }}" class="{{ 'active' if request.endpoint == 'candidates' else '' }}">Candidates</a>
-      <a href="{{ url_for('questions') }}" class="{{ 'active' if request.endpoint in ['questions', 'new_question', 'edit_question'] else '' }}">Question Bank</a>
+      <a href="{{ url_for('roles') }}" class="{{ 'active' if request.endpoint in ['roles', 'new_role', 'edit_role'] else '' }}">Roles</a>
+      <a href="{{ url_for('questions') }}" class="{{ 'active' if request.endpoint in ['questions', 'new_question', 'edit_question', 'import_questions'] else '' }}">Question Bank</a>
+      {% if session.get("hr_is_admin") %}
+      <a href="{{ url_for('users') }}" class="{{ 'active' if request.endpoint in ['users', 'new_user'] else '' }}">Users</a>
+      <a href="{{ url_for('smtp_settings') }}" class="{{ 'active' if request.endpoint == 'smtp_settings' else '' }}">SMTP Settings</a>
+      {% endif %}
     </nav>
     <div class="header-account">
       <span>{{ session.get("hr_username") }}</span>
@@ -37,5 +44,18 @@
     {% endwith %}
     {% block content %}{% endblock %}
   </main>
+  {% if session.get("hr_logged_in") %}
+  <script>
+    const menuToggle = document.querySelector(".menu-toggle");
+    const portalNav = document.querySelector(".portal-nav");
+
+    if (menuToggle && portalNav) {
+      menuToggle.addEventListener("click", () => {
+        const isOpen = portalNav.classList.toggle("open");
+        menuToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      });
+    }
+  </script>
+  {% endif %}
 </body>
 </html>

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}HR Users{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <p class="eyebrow">Access Control</p>
+    <h1>HR Portal Users</h1>
+    <p class="muted">Create HR users and control who can access this portal.</p>
+  </div>
+  <a class="primary-action" href="{{ url_for('new_user') }}">New User</a>
+</header>
+
+<section class="panel">
+  <table>
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Email</th>
+        <th>Access</th>
+        <th>Status</th>
+        <th>Created</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td>
+          <strong>{{ user.full_name }}</strong>
+          <small>{{ user.username }}</small>
+        </td>
+        <td>{{ user.email }}</td>
+        <td><span class="pill">{{ "Admin" if user.is_admin else "HR User" }}</span></td>
+        <td><span class="pill {{ 'warn' if not user.active else '' }}">{{ "Active" if user.active else "Disabled" }}</span></td>
+        <td>{{ user.created_at.strftime("%d-%m-%Y") if user.created_at else "-" }}</td>
+        <td class="actions">
+          <form method="post" action="{{ url_for('reset_user_password', user_id=user.user_id) }}">
+            <button type="submit">Reset Password</button>
+          </form>
+          <form method="post" action="{{ url_for('toggle_user', user_id=user.user_id) }}">
+            <button type="submit">{{ "Disable" if user.active else "Enable" }}</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" class="empty">No HR users found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

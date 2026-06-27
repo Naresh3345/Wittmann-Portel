@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Import Questions{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <p class="eyebrow">Question Bank</p>
+    <h1>Import Roles and Questions</h1>
+  </div>
+  <a class="secondary-action" href="{{ url_for('questions') }}">Back</a>
+</header>
+
+<section class="content-grid">
+  <form class="editor-form" method="post" enctype="multipart/form-data">
+    <label>
+      Excel or CSV file
+      <input type="file" name="question_file" accept=".xlsx,.xlsm,.csv" required>
+    </label>
+    <button class="primary-action" type="submit">Import Questions</button>
+  </form>
+
+  <div class="panel">
+    <div class="panel-title">
+      <h2>Required Columns</h2>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Column</th><th>Details</th></tr>
+      </thead>
+      <tbody>
+        {% for key, label in columns.items() %}
+        <tr>
+          <td>{{ label }}</td>
+          <td>
+            {% if key in ["role_name", "section", "topic", "question_text", "correct_answer"] %}
+              Required
+            {% elif key == "options" %}
+              Optional. Put each option on a new line or separate with |
+            {% elif key == "keywords" %}
+              Optional. Put each keyword on a new line or separate with |
+            {% elif key == "active" %}
+              Optional. Use TRUE/FALSE or Yes/No
+            {% else %}
+              Optional
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

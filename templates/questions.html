@@ -6,7 +6,11 @@
     <p class="eyebrow">Live Question Bank</p>
     <h1>Role Questions</h1>
   </div>
-  <a class="primary-action" href="{{ url_for('new_question') }}">New Question</a>
+  <div class="header-actions">
+    <a class="secondary-action" href="{{ url_for('roles') }}">Manage Roles</a>
+    <a class="secondary-action" href="{{ url_for('import_questions') }}">Import Excel</a>
+    <a class="primary-action" href="{{ url_for('new_question') }}">New Question</a>
+  </div>
 </header>
 
 <form class="filters" method="get">

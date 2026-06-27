@@ -7,7 +7,10 @@
     <h1>Interviewer HR Portal</h1>
     <p class="muted">Connected to {{ db_label }}</p>
   </div>
-  <a class="primary-action" href="{{ url_for('questions') }}">Manage Questions</a>
+  <div class="header-actions">
+    <a class="secondary-action" href="{{ url_for('roles') }}">Manage Roles</a>
+    <a class="primary-action" href="{{ url_for('questions') }}">Manage Questions</a>
+  </div>
 </header>
 
 <section class="metrics-grid">

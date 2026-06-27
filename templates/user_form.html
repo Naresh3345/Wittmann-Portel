@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}New HR User{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <p class="eyebrow">Access Control</p>
+    <h1>New HR User</h1>
+    <p class="muted">The login link sent to the user is {{ portal_url }}.</p>
+  </div>
+  <a class="secondary-action" href="{{ url_for('users') }}">Back</a>
+</header>
+
+{% if created_password %}
+<section class="panel access-result">
+  <h2>User Created</h2>
+  <p class="muted">Email was not sent automatically. Share these details securely with the new HR user.</p>
+  <pre>Portal: {{ portal_url }}
+Username: {{ form_values.username }}
+Password: {{ created_password }}</pre>
+</section>
+{% endif %}
+
+<form class="editor-form" method="post">
+  <div class="form-row">
+    <label>
+      Full Name
+      <input name="full_name" value="{{ form_values.full_name }}" placeholder="Example: Priya Sharma" required>
+    </label>
+    <label>
+      Email
+      <input type="email" name="email" value="{{ form_values.email }}" placeholder="name@company.com" required>
+    </label>
+    <label>
+      Username
+      <input name="username" value="{{ form_values.username }}" placeholder="Leave as email or enter username">
+    </label>
+  </div>
+
+  <div class="form-row two">
+    <label>
+      Create Password
+      <input type="password" name="password" autocomplete="new-password" minlength="8" required>
+    </label>
+    <label>
+      Confirm Password
+      <input type="password" name="confirm_password" autocomplete="new-password" minlength="8" required>
+    </label>
+  </div>
+
+  <label class="check-row">
+    <input type="checkbox" name="is_admin">
+    Allow this user to create and manage HR portal users
+  </label>
+
+  <button class="primary-action" type="submit">Create User and Email Access</button>
+</form>
+{% endblock %}

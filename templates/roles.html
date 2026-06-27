@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Roles{% endblock %}
+{% block content %}
+<header class="page-header">
+  <div>
+    <p class="eyebrow">Interview Setup</p>
+    <h1>Roles</h1>
+    <p class="muted">Create a role first, then add questions for that role.</p>
+  </div>
+  <a class="primary-action" href="{{ url_for('new_role') }}">New Role</a>
+</header>
+
+<section class="panel">
+  <table>
+    <thead>
+      <tr>
+        <th>Role</th>
+        <th>Slug</th>
+        <th>Questions</th>
+        <th>Ready For Interview</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for role in roles %}
+      {% set ready = role.active_aptitude >= sections.Aptitude and role.active_programming >= sections.Programming %}
+      <tr>
+        <td><strong>{{ role.role_name }}</strong></td>
+        <td><small>{{ role.role_slug }}</small></td>
+        <td>
+          <strong>{{ role.active_questions }}</strong> active / {{ role.total_questions }} total
+          <small>Aptitude {{ role.active_aptitude }}/{{ sections.Aptitude }} / Programming {{ role.active_programming }}/{{ sections.Programming }}</small>
+        </td>
+        <td>
+          <span class="pill {{ 'warn' if not ready else '' }}">{{ "Ready" if ready else "Need more questions" }}</span>
+        </td>
+        <td class="actions">
+          <a href="{{ url_for('questions', role_slug=role.role_slug) }}">View Questions</a>
+          <a href="{{ url_for('new_question', role_slug=role.role_slug) }}">Add Question</a>
+          <a href="{{ url_for('edit_role', role_id=role.role_id) }}">Edit Role</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="empty">No roles found. Create your first interview role.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}
